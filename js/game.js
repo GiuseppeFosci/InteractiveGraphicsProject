@@ -166,13 +166,25 @@ function setRobotPrecision() {
     // Reset the score element to 0
     if (scoreElement) scoreElement.innerText = 0;
   
+
+    /*
+    In CannonJS, the world is composed by set of object calles "bodies"
+    Every body has own geometry with own geometries like mass, position ecc
+    */
     if (world) {
       // Remove every object from the CannonJS world
+
       while (world.bodies.length > 0) {
         world.removeBody(world.bodies[0]);
       }
     }
-  
+    
+
+    /*When we restart a game we want to remove all the block,
+    the block are of type mesh, so we find all the block and
+    remove it from the scene.
+
+    */
     if (scene) {
       // Remove every Mesh from the ThreeJS scene
       while (scene.children.find((c) => c.type == "Mesh")) {
@@ -186,5 +198,27 @@ function setRobotPrecision() {
       // Add the first layer
       addLayer(-10, 0, originalBoxSize, originalBoxSize, "x");
     }
+  }
+  
+  /*
+  Generate a box with posizion , width, depth and a booleand variable
+  falls, used to indicate if box must falls or not 
+  */
+  function generateBox(x, y, z, width, depth, falls) {
+    
+    const geometry = new THREE.BoxGeometry(width, boxHeight, depth);
+    const color = new THREE.Color(`hsl(${30 + stackOnTop.length * 4}, 100%, 50%)`);
+    const material = new THREE.MeshLambertMaterial({ color });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y, z);
+    scene.add(mesh);
+  }
+
+  function addLayer(x, z, width, depth, direction) {
+    const y = boxHeight * stackOnTop.length; // Add the new box one layer higher
+    //Initially the box must not fall, so they aren't subject to force of gravity
+    const layer = generateBox(x, y, z, width, depth, false);
+    layer.direction = direction;
+    stackOnTop.push(layer); 
   }
   
