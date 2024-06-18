@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>BlockGame</title>
+    <link rel="stylesheet" href="css/styles1.css">
+    <style>
+        body { margin: 0; }
+    </style>
+</head>
+<body>
+    <div id="instructions">
+        <div class="content">
+            <p>Stack the blocks on top of each other</p>
+            <p>Pres Space when a block is above the stack. Can you reach the blue color blocks?</p>
+            <p>press R to start the game</p>
+        </div>
+    </div>
+    <div id="results">
+        <div class="content">
+            <h1>Block Missed</h1>
+            <h2>Press R to Restart</h2>
+        </div>
+    </div>
+    <div id="score">0</div>
+
+    <!-- Menu Settins -->
+    <div id="settings">
+        <label for="speedRange">Speed:</label>
+        <input type="range" id="speedRange" name="speedRange" min="5" max="15" value="7">
+        <br>
+        
+        <label for="perspective_camera">PerspectiveCamera</label>
+        <input type="checkbox" id="perspective_camera" name="perspective_camera">
+        
+        <br>
+        <label for="antialiasing">Antialiasing</label>
+        <input type="checkbox" id="antialiasing" name="antialiasing">
+        
+        <br>
+    
+        <label for="cameraX">Camera X:</label>
+        <input type="range" id="cameraX" name="cameraX" min="3" max="10" value="4">
+        <br>
+        
+        <label for="cameraY">Camera Y:</label>
+        <input type="range" id="cameraY" name="cameraY" min="3" max="10" value="4">
+        <br>
+        
+        <label for="cameraZ">Camera Z:</label>
+        <input type="range" id="cameraZ" name="cameraZ" min="3" max="10" value="4">
+        <br>
+        
+        <button id="applySettingsButton">Apply Settings</button>
+    </div>
+    
+    
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three/build/three.module.js",
+            "cannon-es": "https://unpkg.com/cannon-es/dist/cannon-es.js"
+        }
+    }
+    </script>
+
+    
+    <script type="module" src="js/options.js"></script>
+    <script type="module" src="js/game.js"></script>
+</body>
+</html>
