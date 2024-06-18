@@ -145,3 +145,46 @@ function setRobotPrecision() {
   
     
   }
+
+  function startGame() {
+    autopilot = false; // Disable autopilot mode
+    gameEnded = false; // Reset the game ended flag
+    lastTime = 0; // Reset the last timestamp of animation
+    stackOnTop = []; // Clear the stack of parts on top
+    overhangs = []; // Clear the overhanging parts
+  
+    if (camera) {
+      // Reset camera positions
+      camera.position.set(cameraX, cameraY, cameraZ); // Set camera position
+      camera.lookAt(0, 0, 0); // Set camera target
+    }
+  
+    // Hide instructions element if it exists
+    if (instructionsElement) instructionsElement.style.display = "none";
+    // Hide results element if it exists
+    if (resultsElement) resultsElement.style.display = "none";
+    // Reset the score element to 0
+    if (scoreElement) scoreElement.innerText = 0;
+  
+    if (world) {
+      // Remove every object from the CannonJS world
+      while (world.bodies.length > 0) {
+        world.removeBody(world.bodies[0]);
+      }
+    }
+  
+    if (scene) {
+      // Remove every Mesh from the ThreeJS scene
+      while (scene.children.find((c) => c.type == "Mesh")) {
+        const mesh = scene.children.find((c) => c.type == "Mesh");
+        scene.remove(mesh);
+      }
+  
+      // Rebuild the foundation
+      addLayer(0, 0, originalBoxSize, originalBoxSize);
+  
+      // Add the first layer
+      addLayer(-10, 0, originalBoxSize, originalBoxSize, "x");
+    }
+  }
+  
