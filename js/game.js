@@ -61,3 +61,87 @@ document.getElementById("applySettingsButton").addEventListener("click", () => {
   cameraZ = parseFloat(document.getElementById("cameraZ").value);
   console.log("Camera coordinates updated to: X =", cameraX, ", Y =", cameraY, ", Z =", cameraZ);
 });
+
+// Determines how precise the game is on autopilot
+function setRobotPrecision() {
+    robotPrecision = Math.random() * 1 - 0.5;
+  }
+  
+  function init() {
+    autopilot = true;
+    gameEnded = false;
+    lastTime = 0;
+    stackOnTop = [];
+    overhangs = [];
+    setRobotPrecision();
+    perspective_camera = false;
+  
+  
+    // Initialize CannonJS
+    world = new CANNON.World();
+    world.gravity.set(0, -gravity , 0); // Gravity pulls things down
+    world.broadphase = new CANNON.NaiveBroadphase();
+    world.solver.iterations = 40;
+  
+    // Initialize ThreeJs
+    const aspect = window.innerWidth / window.innerHeight;
+    const width = 12  ;
+    const height = width / aspect;
+  
+    camera = new THREE.OrthographicCamera(
+      width / -2    , // left
+      width / 2, // right
+      height / 1    , // top
+      height / -2, // bottom
+      0, // near plane
+      100 // far plane
+    );
+  //TODO ENABLE OPTION OF PROSPECTIVE CAMERA
+    // If you want to use perspective camera instead, uncomment these lines
+    if (perspective_camera == true )
+     camera = new THREE.PerspectiveCamera(
+      45, // field of view
+      aspect, // aspect ratio
+      1, // near plane
+      100 // far plane
+    );
+    
+  
+    camera.position.set(cameraX, cameraY, cameraZ);
+    camera.lookAt(0, 0, 0);
+  
+    scene = new THREE.Scene();
+  
+    // Foundation
+    addLayer(0, 0, originalBoxSize, originalBoxSize);
+  
+    // First layer
+    addLayer(-10, 0, originalBoxSize, originalBoxSize, "x");
+  
+    // Set up lights
+    //Ambient light with white colour and intensity of 60%, uniform way (all object in same way)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+  
+    //Directional light
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    dirLight.position.set(10, 20, 0);
+    scene.add(dirLight);
+  
+    // Set up renderer
+    renderer = new THREE.WebGLRenderer({ 
+      antialias: antialias_setting,
+      alpha:false,        // Abilita la trasparenza del canvas
+      precision: 'highp',             // Precisione alta per gli shader
+      
+    
+    
+  
+    });
+  
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setAnimationLoop(animation);
+    document.body.appendChild(renderer.domElement);
+  
+    
+  }
