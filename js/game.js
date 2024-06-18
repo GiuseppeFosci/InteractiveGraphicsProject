@@ -213,10 +213,32 @@ function setRobotPrecision() {
     mesh.position.set(x, y, z);
     scene.add(mesh);
   
-    // CannonJS
+    /* CannonJS
+
+    We create same box with halved size, 
+    to favor collection algorithms
+    */
     const shape = new CANNON.Box(
       new CANNON.Vec3(width / 2, boxHeight / 2, depth / 2)
-    )
+    );
+
+    let mass = falls ? 5 : 0; // If it shouldn't fall then setting the mass to zero will keep it stationary
+    mass *= width / originalBoxSize; // Reduce mass proportionately by size
+    mass *= depth / originalBoxSize; // Reduce mass proportionately by size
+    //Creation of new physics body using the shape and the mass compute as soon as
+    const body = new CANNON.Body({ mass, shape });
+    /*Block position behind physics world,
+      same position of threejs box
+    */
+    body.position.set(x, y, z);
+    world.addBody(body);
+  
+    return {
+      threejs: mesh,
+      cannonjs: body,
+      width,
+      depth
+    };
 
   }
 
@@ -227,4 +249,23 @@ function setRobotPrecision() {
     layer.direction = direction;
     stackOnTop.push(layer); 
   }
+
+  /*
+  It compute the vertical position of overhang(sporgenza)
+  based on the height of block times  
+  - boxHeight: is the default height of each block.
+  -stackOnTop.length: returns the number of blocks currently on the stack. 
+  By multiplying the height of each block (boxHeight) by the number of blocks in the stack, 
+  we get the total height up to the new block.
+  */
+  function addOverhang(x, z, width, depth) {
+    //If i add a positive number here, block will falls "too high"
+    const y = boxHeight * (stackOnTop.length - 1); 
+    const overhang = generateBox(x, y, z, width, depth, true);
+    //Adds the newly created overhang block to the overhangs array to keep track of it.
+    overhangs.push(overhang);
+  }
+
+
+
   
