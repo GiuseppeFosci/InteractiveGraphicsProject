@@ -425,12 +425,12 @@ function setRobotPrecision() {
         if (scoreElement) {
         scoreElement.innerText = stackOnTop.length - 1;
         }
-
+    
         addLayer(nextX, nextZ, newWidth, newDepth, nextDirection);
-        } else {
-        missedTheSpot();
+    } else {
+        missedTheSpot(); //if overlap = 0
         }
-
+    
 
     }
     
