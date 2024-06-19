@@ -48,6 +48,7 @@ window.addEventListener("wheel", function(event) {
 
 init();
 
+/*** EVENT HANDLER ***/
 // Aggiorna la variabile difficulty, perspective_camera, antialiasing e gravity quando si preme il pulsante "Apply Settings"
 document.getElementById("applySettingsButton").addEventListener("click", () => {
   difficulty = parseFloat(document.getElementById("speedRange").value) / 1000;
@@ -338,16 +339,49 @@ function setRobotPrecision() {
     const shape = new CANNON.Box(
       new CANNON.Vec3(newWidth / 2, boxHeight / 2, newDepth / 2)
     );
+
+
     /*Remove all already exist shape for the block, and now the block 
     reflect correct dimensions. 
     we need this otherwise the physics object may have overlayed shapes
 
     */
     topLayer.cannonjs.shapes = [];  
-    
-    
     topLayer.cannonjs.addShape(shape);
 }
+
+
+  function splitBlockAndAddNextOneIfOverlaps(){
+    //Did game ended?
+    if (gameEnded == true){
+        return;
+    }
+
+    //We need TopLayer and Previous Layer from the stack
+    const topLayer = stackOnTop[stackOnTop.length - 1];
+    const previousLayer = stackOnTop[stackOnTop.length -2];
+
+    //Determine direction of TopLayer
+    const direction = topLayer.direction;
+
+      // Calculate size and delta based on the direction
+    let size, delta;
+        if (direction === "x") {
+    size = topLayer.width;
+    //Difference between previous and top layer 
+    delta = topLayer.threejs.position.x - previousLayer.threejs.position.x;
+        } else { //Similar but now for z diretion
+    size = topLayer.depth;
+    delta = topLayer.threejs.position.z - previousLayer.threejs.position.z;
+    }
+
+    //Overhang must be positive, so we use "valore assoluto"
+    const overhangSize = Math.abs(delta);
+    const overlap = size - overhangSize;
+
+    //We call cut cutBox only if we have 
+
+  }
 
 
 
