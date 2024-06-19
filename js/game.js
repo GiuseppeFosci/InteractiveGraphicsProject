@@ -384,25 +384,59 @@ function setRobotPrecision() {
     if(overlap > 0){
         cutBox(topLayer, overlap, size, delta);
         let overhangX, overhangZ, overhangWidth, overhangDepth;
+        /*We use this for know in which direction move the overhang
+          if delta postivive we move overhang on right
+        */
         const overhangShift = (overlap / 2 + overhangSize / 2) * Math.sign(delta);
 
         if (direction == "x") { 
             /*This move overhang in correct position, 
             and the overhang on z not change */ 
-        overhangX = topLayer.threejs.position.x + overhangShift;
-        overhangZ = topLayer.threejs.position.z;
-        overhangWidth = overhangSize;
-        overhangDepth = topLayer.depth;
-            } else {
-        overhangX = topLayer.threejs.position.x;
-        overhangZ = topLayer.threejs.position.z + overhangShift;
-        overhangWidth = topLayer.width;
-        overhangDepth = overhangSize;
-    }
+            overhangX = topLayer.threejs.position.x + overhangShift;
+            overhangZ = topLayer.threejs.position.z;
+            overhangWidth = overhangSize;
+            overhangDepth = topLayer.depth;
+        } else {
+            overhangX = topLayer.threejs.position.x;
+            overhangZ = topLayer.threejs.position.z + overhangShift;
+            overhangWidth = topLayer.width;
+            overhangDepth = overhangSize;
+            }
+
+        // Next layer
+        let nextX;
+        let nextZ;
+        let nextDirection;
+
+        //This because we need to alternate the direction of layer
+        if (direction == "x") {
+        nextX = topLayer.threejs.position.x;
+        nextZ = -10;
+        nextDirection = "z";
+        } else {
+        nextX = -10;
+        nextZ = topLayer.threejs.position.z;
+        nextDirection = "x";
+        }
+
+        const newWidth = topLayer.width; // New layer has the same size as the cut top layer
+        const newDepth = topLayer.depth; // New layer has the same size as the cut top layer
+
+        if (scoreElement) {
+        scoreElement.innerText = stackOnTop.length - 1;
+        }
+
+        addLayer(nextX, nextZ, newWidth, newDepth, nextDirection);
+        } else {
+        missedTheSpot();
+        }
+
 
     }
+    
+    
+    
 
-  }
 
 
 
