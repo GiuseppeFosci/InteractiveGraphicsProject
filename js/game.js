@@ -62,6 +62,28 @@ document.getElementById("applySettingsButton").addEventListener("click", () => {
   console.log("Camera coordinates updated to: X =", cameraX, ", Y =", cameraY, ", Z =", cameraZ);
 });
 
+//window.addEventListener("mousedown", eventHandler);
+window.addEventListener("touchstart", eventHandler); //Touchstart for touchdevices
+window.addEventListener("keydown", function (event) {
+  if (event.key == " ") {
+    event.preventDefault();
+    eventHandler();
+    return;
+  }
+  if (event.key == "R" || event.key == "r") {
+    //Prevent default behaviour
+    event.preventDefault();
+    this.setTimeout(2000);
+    startGame();
+    return;
+  }
+});
+
+function eventHandler() {
+  if (autopilot) startGame();
+  else splitBlockAndAddNextOneIfOverlaps();
+}
+
 // Determines how precise the game is on autopilot
 function setRobotPrecision() {
     robotPrecision = Math.random() * 1 - 0.5;
