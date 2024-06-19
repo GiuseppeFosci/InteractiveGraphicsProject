@@ -233,9 +233,10 @@ function setRobotPrecision() {
     body.position.set(x, y, z);
     world.addBody(body);
   
+    //We turn object composed by:
     return {
-      threejs: mesh,
-      cannonjs: body,
+      threejs: mesh, //Mesh type object (Box)
+      cannonjs: body, //Physics block
       width,
       depth
     };
@@ -249,6 +250,7 @@ function setRobotPrecision() {
     layer.direction = direction;
     stackOnTop.push(layer); 
   }
+
 
   /*
   It compute the vertical position of overhang(sporgenza)
@@ -265,6 +267,71 @@ function setRobotPrecision() {
     //Adds the newly created overhang block to the overhangs array to keep track of it.
     overhangs.push(overhang);
   }
+
+
+  /*
+  Manage cut of overlying block
+    topLayer : upper block to be cut
+    overlap : The length of the overlapping part of the block 
+    size : original dimension of bloc
+    delta: Difference of position ( x or z ) of upper block and inferior block
+
+
+  */
+  function cutBox(topLayer, overlap, size, delta) {
+    // Extract the direction of the topLayer
+    const direction = topLayer.direction;
+  
+    let newWidth, newDepth;
+  
+    // Calculate new dimensions based on the cutting direction
+    if (direction == "x") {
+      newWidth = overlap;
+      newDepth = topLayer.width;
+      // Update the scale and position of the topLayer along the x-axis
+      topLayer.threejs.scale.x = overlap / size;
+      topLayer.threejs.position.x -= delta / 2;
+      // Update the position of the topLayer along the x-axis in the CannonJS model
+      topLayer.cannonjs.position.x -= delta / 2;
+    } else {
+      newWidth = topLayer.width;
+      newDepth = overlap;
+      // Update the scale and position of the topLayer along the z-axis
+      topLayer.threejs.scale.z = overlap / size;
+      topLayer.threejs.position.z -= delta / 2;
+      // Update the position of the topLayer along the z-axis in the CannonJS model
+      topLayer.cannonjs.position.z -= delta / 2;
+    }
+  
+    // Update the dimensions of the topLayer
+    topLayer.width = newWidth;
+    topLayer.depth = newDepth;
+  
+    /* 
+    Now we must do similar in CannonJs
+    Replace the shape with a smaller one in CannonJS, it's like a physiscs 
+    update of block dimension
+    
+    */
+    const shape = new CANNON.Box(
+      new CANNON.Vec3(newWidth / 2, boxHeight / 2, newDepth / 2)
+    );
+    /*Remove all already exist shape for the block, and now the block 
+    reflect correct dimensions. 
+    we need this otherwise the physics object may have overlayed shapes
+
+    */
+    topLayer.cannonjs.shapes = [];  
+    
+    
+    topLayer.cannonjs.addShape(shape);
+}
+
+
+
+  
+
+
 
 
 
