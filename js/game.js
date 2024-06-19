@@ -301,30 +301,30 @@ function setRobotPrecision() {
 
 
   */
-  function cutBox(topLayer, overlap, size, delta) {
+    function cutBox(topLayer, overlap, size, delta) {
     // Extract the direction of the topLayer
-    const direction = topLayer.direction;
-  
-    let newWidth, newDepth;
-  
-    // Calculate new dimensions based on the cutting direction
-    if (direction == "x") {
-      newWidth = overlap;
-      newDepth = topLayer.width;
-      // Update the scale and position of the topLayer along the x-axis
-      topLayer.threejs.scale.x = overlap / size;
-      topLayer.threejs.position.x -= delta / 2;
-      // Update the position of the topLayer along the x-axis in the CannonJS model
-      topLayer.cannonjs.position.x -= delta / 2;
-    } else {
-      newWidth = topLayer.width;
-      newDepth = overlap;
-      // Update the scale and position of the topLayer along the z-axis
-      topLayer.threejs.scale.z = overlap / size;
-      topLayer.threejs.position.z -= delta / 2;
-      // Update the position of the topLayer along the z-axis in the CannonJS model
-      topLayer.cannonjs.position.z -= delta / 2;
-    }
+        const direction = topLayer.direction;
+    
+        let newWidth, newDepth;
+    
+        // Calculate new dimensions based on the cutting direction
+        if (direction == "x") {
+            newWidth = overlap;
+            newDepth = topLayer.width;
+            // Update the scale and position of the topLayer along the x-axis
+            topLayer.threejs.scale.x = overlap / size;
+            topLayer.threejs.position.x -= delta / 2;
+            // Update the position of the topLayer along the x-axis in the CannonJS model
+            topLayer.cannonjs.position.x -= delta / 2;
+        } else {
+            newWidth = topLayer.width;
+            newDepth = overlap;
+            // Update the scale and position of the topLayer along the z-axis
+            topLayer.threejs.scale.z = overlap / size;
+            topLayer.threejs.position.z -= delta / 2;
+            // Update the position of the topLayer along the z-axis in the CannonJS model
+            topLayer.cannonjs.position.z -= delta / 2;
+        }
   
     // Update the dimensions of the topLayer
     topLayer.width = newWidth;
@@ -430,10 +430,51 @@ function setRobotPrecision() {
     } else {
         missedTheSpot(); //if overlap = 0
         }
-    
+}
 
-    }
+function missedTheSpot() {
+    const topLayer = stackOnTop[stackOnTop.length - 1];
+  
+    // Turn to top layer into an overhang and let it fall down
+    addOverhang(
+      topLayer.threejs.position.x,
+      topLayer.threejs.position.z,
+      topLayer.width,
+      topLayer.depth
+    );
+  
+    //Remove mesh and physics object associated to it 
+    world.removeBody(topLayer.cannonjs);
+    scene.remove(topLayer.threejs);
+  
+    gameEnded = true;
+    //Result element if it exist in index.html
+    if (resultsElement) resultsElement.style.display = "flex";
+}
+/*
+We call functio animation at every frame used requestAnimationFrame
+*/
+function animation(time){ 
+    if (lastTime) { //First time lastTime is undefined
+        const timePassed = time - lastTime; //Time between last 
+        const speed = difficulty;
     
+        const topLayer = stackOnTop[stackOnTop.length - 1]; 
+        const previousLayer = stackOnTop[stackOnTop.length - 2];
+
+        // The top level box should move if the game has not ended AND
+      // it's either NOT in autopilot or it is in autopilot and the box did not yet reach the robot position
+      const boxShouldMove =
+      !gameEnded && // Game still in progress
+      (!autopilot || //NOT autopilot
+        (autopilot && //OR 
+          topLayer && //Top Box moved before it reach a position less than previous plus an error
+          topLayer.threejs.position[topLayer.direction] <
+            previousLayer.threejs.position[topLayer.direction] +
+              robotPrecision));
+    }
+
+}
     
     
 
