@@ -512,6 +512,25 @@ function adjustCameraPosition(speed, timePassed, stackOnTop, boxHeight) {
     }
   }
 
+  function updatePhysics(timePassed) { 
+    // Step the physics world based on the time passed (in seconds)
+    world.step(timePassed / 1000);
+  
+    // Copy coordinates from Cannon.js to Three.js for each overhang object
+    overhangs.forEach((element) => {
+      // Copy the position (x, y, z) from Cannon.js to Three.js
+
+      /*Visual position of the the box update accordly with physical
+      position simulated by Cannon
+      */
+      element.threejs.position.copy(element.cannonjs.position);
+      
+      // Copy the quaternion (orientation) from Cannon.js to Three.js
+      element.threejs.quaternion.copy(element.cannonjs.quaternion);
+    });
+  }
+  
+
 
 
 
