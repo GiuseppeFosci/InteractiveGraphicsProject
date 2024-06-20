@@ -351,86 +351,88 @@ function setRobotPrecision() {
 }
 
 
-  function splitBlockAndAddNextOneIfOverlaps(){
-    //Did game ended?
-    if (gameEnded == true){
-        return;
-    }
+function splitBlockAndAddNextOneIfOverlaps() {
+  // Verifica se il gioco è terminato
+  if (gameEnded == true) {
+      return; // Esce dalla funzione se il gioco è terminato
+  }
 
-    //We need TopLayer and Previous Layer from the stack
-    const topLayer = stackOnTop[stackOnTop.length - 1];
-    const previousLayer = stackOnTop[stackOnTop.length -2];
+  // Ottiene il layer superiore (topLayer) e il layer precedente (previousLayer) dalla pila (stackOnTop)
+  const topLayer = stackOnTop[stackOnTop.length - 1];
+  const previousLayer = stackOnTop[stackOnTop.length - 2];
 
-    //Determine direction of TopLayer
-    const direction = topLayer.direction;
+  // Determina la direzione del topLayer
+  const direction = topLayer.direction;
 
-      // Calculate size and delta based on the direction
-    let size, delta;
-        if (direction === "x") {
-    size = topLayer.width;
-    //Difference between previous and top layer 
-    delta = topLayer.threejs.position.x - previousLayer.threejs.position.x;
-        } else { //Similar but now for z diretion
-    size = topLayer.depth;
-    delta = topLayer.threejs.position.z - previousLayer.threejs.position.z;
-    }
+  // Calcola size (dimensione) e delta (differenza) in base alla direzione del topLayer
+  let size, delta;
+  if (direction === "x") {
+      size = topLayer.width;
+      delta = topLayer.threejs.position.x - previousLayer.threejs.position.x;
+  } else { // direction === "z"
+      size = topLayer.depth;
+      delta = topLayer.threejs.position.z - previousLayer.threejs.position.z;
+  }
 
-    //Overhang must be positive, so we use "valore assoluto"
-    const overhangSize = Math.abs(delta);
-    const overlap = size - overhangSize;
+  // Calcola la dimensione dell'overhang e l'overlap
+  const overhangSize = Math.abs(delta);
+  const overlap = size - overhangSize;
 
-    //We call cut cutBox only if we have a positive overlap
+  // Esegue la funzione cutBox solo se c'è un overlap positivo
+  if (overlap > 0) {
+      cutBox(topLayer, overlap, size, delta);
 
-    if(overlap > 0){
-        cutBox(topLayer, overlap, size, delta);
-        let overhangX, overhangZ, overhangWidth, overhangDepth;
-        /*We use this for know in which direction move the overhang
-          if delta postivive we move overhang on right
-        */
-        const overhangShift = (overlap / 2 + overhangSize / 2) * Math.sign(delta);
+      // Calcola le coordinate e le dimensioni dell'overhang
+      let overhangX, overhangZ, overhangWidth, overhangDepth;
+      // Calcola lo spostamento dell'overhang in base alla direzione
+      const overhangShift = (overlap / 2 + overhangSize / 2) * Math.sign(delta);
 
-        if (direction == "x") { 
-            /*This move overhang in correct position, 
-            and the overhang on z not change */ 
-            overhangX = topLayer.threejs.position.x + overhangShift;
-            overhangZ = topLayer.threejs.position.z;
-            overhangWidth = overhangSize;
-            overhangDepth = topLayer.depth;
-        } else {
-            overhangX = topLayer.threejs.position.x;
-            overhangZ = topLayer.threejs.position.z + overhangShift;
-            overhangWidth = topLayer.width;
-            overhangDepth = overhangSize;
-            }
+      if (direction == "x") {
+          // Se la direzione è "x", l'overhang si sposta sull'asse x e rimane sulla stessa posizione z
+          overhangX = topLayer.threejs.position.x + overhangShift;
+          overhangZ = topLayer.threejs.position.z;
+          overhangWidth = overhangSize;
+          overhangDepth = topLayer.depth;
+      } else { // direction === "z"
+          // Se la direzione è "z", l'overhang si sposta sull'asse z e rimane sulla stessa posizione x
+          overhangX = topLayer.threejs.position.x;
+          overhangZ = topLayer.threejs.position.z + overhangShift;
+          overhangWidth = topLayer.width;
+          overhangDepth = overhangSize;
+      }
 
-        // Next layer
-        let nextX;
-        let nextZ;
-        let nextDirection;
+      // Aggiunge l'overhang alla scena
+      addOverhang(overhangX, overhangZ, overhangWidth, overhangDepth);
 
-        //This because we need to alternate the direction of layer
-        if (direction == "x") {
-        nextX = topLayer.threejs.position.x;
-        nextZ = -10;
-        nextDirection = "z";
-        } else {
-        nextX = -10;
-        nextZ = topLayer.threejs.position.z;
-        nextDirection = "x";
-        }
+      // Calcola le coordinate e la direzione del prossimo layer
+      let nextX, nextZ, nextDirection;
+      if (direction == "x") {
+          // Se la direzione è "x", il prossimo layer si sposta lungo l'asse z
+          nextX = topLayer.threejs.position.x;
+          nextZ = -10;
+          nextDirection = "z";
+      } else { // direction === "z"
+          // Se la direzione è "z", il prossimo layer si sposta lungo l'asse x
+          nextX = -10;
+          nextZ = topLayer.threejs.position.z;
+          nextDirection = "x";
+      }
 
-        const newWidth = topLayer.width; // New layer has the same size as the cut top layer
-        const newDepth = topLayer.depth; // New layer has the same size as the cut top layer
+      const newWidth = topLayer.width; // Il nuovo layer ha la stessa larghezza del topLayer tagliato
+      const newDepth = topLayer.depth; // Il nuovo layer ha la stessa profondità del topLayer tagliato
 
-        if (scoreElement) {
-        scoreElement.innerText = stackOnTop.length - 1;
-        }
-    
-        addLayer(nextX, nextZ, newWidth, newDepth, nextDirection);
-    } else {
-        missedTheSpot(); //if overlap = 0
-        }
+      // Aggiorna il punteggio (score) se l'elemento scoreElement è definito
+      if (scoreElement) {
+          scoreElement.innerText = stackOnTop.length - 1;
+      }
+
+      // Aggiunge il nuovo layer alla scena
+      addLayer(nextX, nextZ, newWidth, newDepth, nextDirection);
+  } else {
+      missedTheSpot(); // Se l'overlap è 0, il giocatore ha mancato il punto
+  }
 }
+
 
 function missedTheSpot() {
     const topLayer = stackOnTop[stackOnTop.length - 1];
