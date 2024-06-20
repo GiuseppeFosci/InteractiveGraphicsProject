@@ -480,18 +480,32 @@ function animation(time){
         topLayer.cannonjs.position[topLayer.direction] += speed * timePassed;
   
         /* If the box went beyond the stackOnTop then show up the fail screen
-          case of block over the screen.
+          If topLayer exists and it's position on the direction x or z is bigger than 10
         */
         if (topLayer && topLayer.threejs.position[topLayer.direction] > 10) {
             missedTheSpot();
         
-        }
+        }else {
+            // If it shouldn't move then is it because the autopilot reached the correct position?
+            // Because if so then next level is coming
+            if (autopilot) {
+              splitBlockAndAddNextOneIfOverlaps();
+              setRobotPrecision(); //Change randomly value of precision at every step
+            }
+
+          }
+
 
 
     }
 }
     
-    
+function adjustCameraPosition(speed, timePassed, stackOnTop, boxHeight) {
+    const cameraTargetY = boxHeight * (stackOnTop.length - 2) + 4;
+    if (camera.position.y < cameraTargetY) {
+      camera.position.y += speed * timePassed;
+    }
+  }
 
 
 
