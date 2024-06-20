@@ -454,56 +454,57 @@ function missedTheSpot() {
 /*
 We call functio animation at every frame used requestAnimationFrame
 */
-function animation(time){ 
-    if (lastTime) { //First time lastTime is undefined
-        const timePassed = time - lastTime; //Time between last 
-        const speed = difficulty;
-    
-        const topLayer = stackOnTop[stackOnTop.length - 1]; 
-        const previousLayer = stackOnTop[stackOnTop.length - 2];
+function animation(time) {
+  if (lastTime) {
+    const timePassed = time - lastTime;
+    const speed = difficulty;
 
-        // The top level box should move if the game has not ended AND
-      // it's either NOT in autopilot or it is in autopilot and the box did not yet reach the robot position
-      const boxShouldMove =
-      !gameEnded && // Game still in progress
-      (!autopilot || //NOT autopilot
-        (autopilot && //OR 
-          topLayer && //Top Box moved before it reach a position less than previous plus an error
+    const topLayer = stackOnTop[stackOnTop.length - 1];
+    const previousLayer = stackOnTop[stackOnTop.length - 2];
+
+    // The top level box should move if the game has not ended AND
+    // it's either NOT in autopilot or it is in autopilot and the box did not yet reach the robot position
+    const boxShouldMove =
+      !gameEnded &&
+      (!autopilot ||
+        (autopilot &&
+          topLayer &&
           topLayer.threejs.position[topLayer.direction] <
             previousLayer.threejs.position[topLayer.direction] +
               robotPrecision));
-    }
 
     if (boxShouldMove) {
-        // Keep the position visible on UI and the position in the model in sync
-        topLayer.threejs.position[topLayer.direction] += speed * timePassed;
-        topLayer.cannonjs.position[topLayer.direction] += speed * timePassed;
-  
-        /* If the box went beyond the stackOnTop then show up the fail screen
-          If topLayer exists and it's position on the direction x or z is bigger than 10
-        */
-        if (topLayer && topLayer.threejs.position[topLayer.direction] > 10) {
-            missedTheSpot();
-        
-        }else {
-            // If it shouldn't move then is it because the autopilot reached the correct position?
-            // Because if so then next level is coming
-            if (autopilot) {
-              splitBlockAndAddNextOneIfOverlaps();
-              setRobotPrecision(); //Change randomly value of precision at every step
-            }
-          }
+      // Keep the position visible on UI and the position in the model in sync
+      topLayer.threejs.position[topLayer.direction] += speed * timePassed;
+      topLayer.cannonjs.position[topLayer.direction] += speed * timePassed;
 
-
-        // Adjust camera position
-        adjustCameraPosition(speed, timePassed, stackOnTop, boxHeight);
-        updatePhysics(timePassed);
-        renderer.render(scene, camera);
-
-
+      // If the box went beyond the stackOnTop then show up the fail screen
+      if (topLayer && topLayer.threejs.position[topLayer.direction] > 10) {
+        missedTheSpot();
+      }
+    } else {
+      // If it shouldn't move then is it because the autopilot reached the correct position?
+      // Because if so then next level is coming
+      if (autopilot) {
+        splitBlockAndAddNextOneIfOverlaps();
+        setRobotPrecision();
+      }
     }
-    lastTime= time;
+
+    // Adjust camera position
+    const cameraTargetY = boxHeight * (stackOnTop.length - 2) + 4;
+    if (camera.position.y < cameraTargetY) {
+      camera.position.y += speed * timePassed;
+    }
+
+    updatePhysics(timePassed);
+    renderer.render(scene, camera);
+  }
+  lastTime = time;
 }
+
+
+    
     
 function adjustCameraPosition(speed, timePassed, stackOnTop, boxHeight) {
     const cameraTargetY = boxHeight * (stackOnTop.length - 2) + 4;

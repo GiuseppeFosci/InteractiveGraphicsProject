@@ -1,0 +1,127 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap");
+html, body {
+  height: 100%;
+  font-family: 'Ubuntu', sans-serif;
+}
+body {
+  margin: 0;
+  color: white;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  cursor: pointer;
+}
+
+#instructions {
+  display: none;
+}
+
+#results,
+body:hover #instructions {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(20, 20, 20, 0.75);
+}
+
+a:visited {
+  color: inherit;
+}
+
+#results {
+  display: none;
+  cursor: default;
+}
+
+#results .content,
+#instructions .content {
+  max-width: 300px;
+  padding: 50px;
+  border-radius: 20px;
+}
+
+#results {
+}
+
+#score {
+  position: absolute;
+  color: white;
+  font-size: 3em;
+  font-weight: bold;
+  top: 30px;
+  left: 30px; /* Imposta il valore di "left" per posizionare lo score a sinistra */
+}
+
+/* Sidebar delle Impostazioni */
+#settings-sidebar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  transition: left 0.3s ease;
+}
+
+.settings-content {
+  padding: 20px;
+}
+
+.settings-content h2 {
+  margin-top: 0;
+}
+
+#settings {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px;
+}
+
+#applySettingsButton {
+  display: block;
+  margin-top: 10px;
+}
+.gfg {
+  height: 50px;
+  width: 50px;
+
+}
+
+.mynav {
+  color: #fff;
+}
+
+.mynav li a {
+  color: #fff;
+  text-decoration: none;
+  width: 100%;
+  display: block;
+  border-radius: 5px;
+  padding: 8px 5px;
+}
+
+.mynav li a.active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.mynav li a:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.mynav li a i {
+  width: 25px;
+  text-align: center;
+}
+
+.notification-badge {
+  background-color: rgba(255, 255, 255, 0.7);
+  float: right;
+  color: #222;
+  font-size: 14px;
+  padding: 0px 8px;
+  border-radius: 2px;
+}
