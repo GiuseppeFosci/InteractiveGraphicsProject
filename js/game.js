@@ -492,12 +492,17 @@ function animation(time){
               splitBlockAndAddNextOneIfOverlaps();
               setRobotPrecision(); //Change randomly value of precision at every step
             }
-
           }
 
 
+        // Adjust camera position
+        adjustCameraPosition(speed, timePassed, stackOnTop, boxHeight);
+        updatePhysics(timePassed);
+        renderer.render(scene, camera);
+
 
     }
+    lastTime= time;
 }
     
 function adjustCameraPosition(speed, timePassed, stackOnTop, boxHeight) {
