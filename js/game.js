@@ -434,7 +434,8 @@ function setRobotPrecision() {
 
 function missedTheSpot() {
     const topLayer = stackOnTop[stackOnTop.length - 1];
-  
+    
+    gameEnded = true;
     // Turn to top layer into an overhang and let it fall down
     addOverhang(
       topLayer.threejs.position.x,
@@ -447,7 +448,6 @@ function missedTheSpot() {
     world.removeBody(topLayer.cannonjs);
     scene.remove(topLayer.threejs);
   
-    gameEnded = true;
     //Result element if it exist in index.html
     if (resultsElement) resultsElement.style.display = "flex";
 }
@@ -474,6 +474,21 @@ function animation(time){
               robotPrecision));
     }
 
+    if (boxShouldMove) {
+        // Keep the position visible on UI and the position in the model in sync
+        topLayer.threejs.position[topLayer.direction] += speed * timePassed;
+        topLayer.cannonjs.position[topLayer.direction] += speed * timePassed;
+  
+        /* If the box went beyond the stackOnTop then show up the fail screen
+          case of block over the screen.
+        */
+        if (topLayer && topLayer.threejs.position[topLayer.direction] > 10) {
+            missedTheSpot();
+        
+        }
+
+
+    }
 }
     
     
