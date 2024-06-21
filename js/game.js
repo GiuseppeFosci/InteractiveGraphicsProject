@@ -23,7 +23,7 @@ const resultsElement = document.getElementById("results");
 //SETTINGS
 let antialias_setting = true;
 let alpha;
-let fog = false;
+let enableFog = false;
 let perspective_camera; 
 let cube_camera;
 let difficulty = 0.008;
@@ -62,23 +62,20 @@ document.getElementById("applySettingsButton").addEventListener("click", () => {
   cameraY = parseFloat(document.getElementById("cameraY").value);
   cameraZ = parseFloat(document.getElementById("cameraZ").value);
   console.log("Camera coordinates updated to: X =", cameraX, ", Y =", cameraY, ", Z =", cameraZ);
-
-  // Applica la configurazione della nebbia in base allo stato della checkbox
-  if (enableFog) {
-    // Applica la nebbia con un colore a caso
-    //const color = Math.random() * 0xffffff; // Genera un colore casuale
-    const near = 5;
+  enableFog = document.getElementById("enableFog").checked;
+  console.log("Fog enabled updated to :", enableFog);
+  if (scene) {
+    if (enableFog) {
+      const near = 5;
       const far = 10;
       const color = 0xefd1b5; // Colore della nebbia in esadecimale
       scene.background = new THREE.Color(0xaaaaaa); // Imposta uno sfondo grigio chiaro
-      scene.fog = new THREE.Fog(color, near, far);  
-    console.log("Fog color:", color);
-  } else {
-    // Rimuovi la nebbia se la checkbox non è selezionata
-    scene.fog = null;
-    console.log("Fog disabled");
+      scene.fog = new THREE.Fog(color, near, far);   
+    } else {
+      scene.background = new THREE.Color(0x000000); // Imposta lo sfondo senza nebbia
+      scene.fog = null; // Rimuovi la nebbia dalla scena
+    }
   }
-
 });
 
 //window.addEventListener("mousedown", eventHandler);
@@ -151,13 +148,25 @@ function setRobotPrecision() {
       100 // far plane
     );
     
-  
+    if (scene) {
+      if (fog) {
+        const near = 5;
+        const far = 10;
+        const color = 0xefd1b5; // Colore della nebbia in esadecimale
+        scene.background = new THREE.Color(0xaaaaaa); 
+        scene.fog = new THREE.Fog(color, near, far);   
+      } else {
+        scene.background = new THREE.Color(0xaaaaaa); // Imposta lo sfondo senza nebbia
+        scene.fog = null; 
+      }
+    }
     camera.position.set(cameraX, cameraY, cameraZ);
     camera.lookAt(0, 0, 0);
     
     scene = new THREE.Scene();
 
 
+  
   
     // Foundation
     addLayer(0, 0, originalBoxSize, originalBoxSize);
