@@ -23,7 +23,7 @@ const resultsElement = document.getElementById("results");
 //SETTINGS
 let antialias_setting = true;
 let alpha;
-
+let fog = false;
 let perspective_camera; 
 let cube_camera;
 let difficulty = 0.008;
@@ -137,8 +137,18 @@ function setRobotPrecision() {
   
     camera.position.set(cameraX, cameraY, cameraZ);
     camera.lookAt(0, 0, 0);
-  
+    
     scene = new THREE.Scene();
+
+
+    if (fog){
+      const near = 5;
+      const far = 10;
+      const color = 0xefd1b5; // Colore della nebbia in esadecimale
+      scene.background = new THREE.Color(0xaaaaaa); // Imposta uno sfondo grigio chiaro
+      scene.fog = new THREE.Fog(color, near, far);   
+
+    }
   
     // Foundation
     addLayer(0, 0, originalBoxSize, originalBoxSize);
