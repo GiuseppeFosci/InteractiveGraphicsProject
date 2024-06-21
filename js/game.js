@@ -62,6 +62,23 @@ document.getElementById("applySettingsButton").addEventListener("click", () => {
   cameraY = parseFloat(document.getElementById("cameraY").value);
   cameraZ = parseFloat(document.getElementById("cameraZ").value);
   console.log("Camera coordinates updated to: X =", cameraX, ", Y =", cameraY, ", Z =", cameraZ);
+
+  // Applica la configurazione della nebbia in base allo stato della checkbox
+  if (enableFog) {
+    // Applica la nebbia con un colore a caso
+    //const color = Math.random() * 0xffffff; // Genera un colore casuale
+    const near = 5;
+      const far = 10;
+      const color = 0xefd1b5; // Colore della nebbia in esadecimale
+      scene.background = new THREE.Color(0xaaaaaa); // Imposta uno sfondo grigio chiaro
+      scene.fog = new THREE.Fog(color, near, far);  
+    console.log("Fog color:", color);
+  } else {
+    // Rimuovi la nebbia se la checkbox non è selezionata
+    scene.fog = null;
+    console.log("Fog disabled");
+  }
+
 });
 
 //window.addEventListener("mousedown", eventHandler);
@@ -141,14 +158,6 @@ function setRobotPrecision() {
     scene = new THREE.Scene();
 
 
-    if (fog){
-      const near = 5;
-      const far = 10;
-      const color = 0xefd1b5; // Colore della nebbia in esadecimale
-      scene.background = new THREE.Color(0xaaaaaa); // Imposta uno sfondo grigio chiaro
-      scene.fog = new THREE.Fog(color, near, far);   
-
-    }
   
     // Foundation
     addLayer(0, 0, originalBoxSize, originalBoxSize);

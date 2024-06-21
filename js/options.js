@@ -25,4 +25,8 @@ function applySettings() {
    // Retrieve the state of the antialiasing checkbox and assign the value to a variable
    const antialiasing = document.getElementById("antialiasing").checked;
    console.log("Antialiasing enabled:", antialiasing);
+     // Retrieve the state of the fog checkbox and assign the value to a variable
+     const enableFog = document.getElementById("enableFog").checked;
+     console.log("Fog enabled:", enableFog);
+   
 }
