@@ -1,15 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap");
+
+/* Stili generici per l'intera pagina */
 html, body {
   height: 100%;
   font-family: 'Ubuntu', sans-serif;
-}
-body {
   margin: 0;
   color: white;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   cursor: pointer;
 }
 
+/* Stile specifico per il corpo */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Stili per gli elementi di gioco */
 #instructions {
   display: none;
 }
@@ -41,158 +46,126 @@ a:visited {
   border-radius: 20px;
 }
 
-#results {
-}
-
 #score {
   position: absolute;
   color: white;
   font-size: 3em;
   font-weight: bold;
   top: 30px;
-  left: 30px; /* Imposta il valore di "left" per posizionare lo score a sinistra */
+  left: 30px;
 }
 
 /* Sidebar delle Impostazioni */
-#settings-sidebar {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: -250px;
-  width: 250px;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-  transition: left 0.3s ease;
-}
-
-.settings-content {
-  padding: 20px;
-}
-
-.settings-content h2 {
-  margin-top: 0;
-}
-
 #settings {
   position: absolute;
-  top: 0;
-  right: 0;
-  margin: 20px;
-}
-
-#applySettingsButton {
-  display: block;
-  margin-top: 10px;
-}
-.gfg {
-  height: 50px;
-  width: 50px;
-
-}
-
-.mynav {
+  top: 50px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #4CAF50;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  font-family: 'Press Start 2P', cursive;
   color: #fff;
+  width: 300px;
 }
-
-.mynav li a {
-  color: #fff;
-  text-decoration: none;
-  width: 100%;
-  display: block;
-  border-radius: 5px;
-  padding: 8px 5px;
-}
-
-.mynav li a.active {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.mynav li a:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.mynav li a i {
-  width: 25px;
-  text-align: center;
-}
-
-.notification-badge {
-  background-color: rgba(255, 255, 255, 0.7);
-  float: right;
-  color: #222;
-  font-size: 14px;
-  padding: 0px 8px;
-  border-radius: 2px;
-}
-/* styles1.css */
-/* styles1.css */
 
 /* Stili per le checkbox e le relative label */
 .checkbox-container {
-  display: flex; /* Utilizza il layout flexbox */
-  align-items: center; /* Allinea verticalmente al centro */
-  margin-bottom: 10px; /* Spazio inferiore tra le checkbox */
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.checkbox-container input[type="checkbox"] {
+  display: none; /* Nascondi l'input checkbox nativo */
 }
 
 .checkbox-label {
-  margin-left: 10px; /* Margine a sinistra per separare dalla checkbox */
-  font-weight: bold; /* Testo in grassetto */
+  position: relative;
+  padding-left: 30px; /* Spazio per l'icona custom */
+  cursor: pointer;
+  font-weight: bold;
 }
 
-/* Stili per le slider */
+/* Stile dell'icona custom per la checkbox */
+.checkbox-label::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #4CAF50;
+  background-color: #666;
+  border-radius: 3px;
+}
+
+/* Stile dell'icona custom per la checkbox quando selezionata */
+.checkbox-container input[type="checkbox"]:checked + .checkbox-label::before {
+  background-color: #4CAF50;
+}
+
+/* Stili per i range slider */
 input[type="range"] {
-  -webkit-appearance: none; /* Rimuove lo stile predefinito del browser */
-  width: 100%; /* Larghezza completa */
-  height: 10px; /* Altezza personalizzata */
-  background-color: #ddd; /* Colore di sfondo */
-  border-radius: 5px; /* Angoli arrotondati */
-  outline: none; /* Rimuove l'outline di focus */
-  opacity: 0.7; /* Opacità */
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 10px;
+  background-color: #ddd;
+  border-radius: 5px;
+  outline: none;
+  opacity: 0.7;
   transition: opacity 0.15s ease-in-out;
 }
 
 input[type="range"]:hover {
-  opacity: 1; /* Opacità aumentata al passaggio */
+  opacity: 1;
 }
 
 input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Rimuove lo stile predefinito del thumb di WebKit */
-  appearance: none; /* Rimuove lo stile predefinito del thumb */
-  width: 20px; /* Larghezza del thumb */
-  height: 20px; /* Altezza del thumb */
-  background-color: #4CAF50; /* Colore di sfondo del thumb */
-  border-radius: 50%; /* Bordi arrotondati */
-  cursor: pointer; /* Cambia il cursore al passaggio */
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background-color: #4CAF50;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 input[type="range"]::-moz-range-thumb {
-  width: 20px; /* Larghezza del thumb per Firefox */
-  height: 20px; /* Altezza del thumb per Firefox */
-  background-color: #4CAF50; /* Colore di sfondo del thumb per Firefox */
-  border-radius: 50%; /* Bordi arrotondati per Firefox */
-  cursor: pointer; /* Cambia il cursore al passaggio per Firefox */
+  width: 20px;
+  height: 20px;
+  background-color: #4CAF50;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 /* Stili per le label */
 label {
-  display: block; /* Rende le label un blocco */
-  margin-bottom: 5px; /* Spazio inferiore tra le label */
-  font-weight: bold; /* Testo in grassetto */
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
 /* Stili per il pulsante "Apply Settings" */
 #applySettingsButton {
-  background-color: #4CAF50; /* Colore di sfondo del pulsante */
-  color: white; /* Colore del testo */
-  border: none; /* Rimuove il bordo */
-  padding: 10px 20px; /* Spaziatura interna */
-  font-size: 16px; /* Dimensione del testo */
-  cursor: pointer; /* Cambia il cursore al passaggio */
-  border-radius: 4px; /* Angoli arrotondati */
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
   transition: background-color 0.3s;
 }
 
 #applySettingsButton:hover {
-  background-color: #45a049; /* Cambia il colore di sfondo al passaggio */
+  background-color: #45a049;
+}
+
+/* Stili specifici per gli elementi di stile videogioco */
+#settings h2 {
+  font-size: 18px;
+  margin-top: 20px;
 }
