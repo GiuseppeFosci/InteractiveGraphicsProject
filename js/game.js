@@ -25,6 +25,7 @@ let antialias_setting = true;
 let alpha;
 
 let perspective_camera; 
+let cube_camera;
 let difficulty = 0.008;
 let precision = 'highp';       // Precisione alta per gli shader
 let gravity = 9.8;
@@ -103,7 +104,9 @@ function setRobotPrecision() {
     // Initialize CannonJS
     world = new CANNON.World();
     world.gravity.set(0, -gravity , 0); // Gravity pulls things down
+    //Define algorithm for collision, it is the basic metod for verify collision with every object in the world
     world.broadphase = new CANNON.NaiveBroadphase();
+    //Max number of iteration managed
     world.solver.iterations = 40;
   
     // Initialize ThreeJs
@@ -111,6 +114,7 @@ function setRobotPrecision() {
     const width = 12  ;
     const height = width / aspect;
   
+    if (perspective_camera == false ){
     camera = new THREE.OrthographicCamera(
       width / -2    , // left
       width / 2, // right
@@ -119,6 +123,7 @@ function setRobotPrecision() {
       0, // near plane
       100 // far plane
     );
+  }
   //TODO ENABLE OPTION OF PROSPECTIVE CAMERA
     // If you want to use perspective camera instead, uncomment these lines
     if (perspective_camera == true )
@@ -302,54 +307,53 @@ function setRobotPrecision() {
 
   */
     function cutBox(topLayer, overlap, size, delta) {
-    // Extract the direction of the topLayer
-        const direction = topLayer.direction;
+      // Extract the direction of the topLayer
+      const direction = topLayer.direction;
+      
+      let newWidth, newDepth;
+      
+      // Calculate new dimensions based on the cutting direction
+      if (direction == "x") {
+          newWidth = overlap;
+          newDepth = topLayer.depth; // Keep the depth same as the original depth
+          // Update the scale and position of the topLayer along the x-axis
+          topLayer.threejs.scale.x = overlap / size;
+          topLayer.threejs.position.x -= delta / 2;
+          // Update the position of the topLayer along the x-axis in the CannonJS model
+          topLayer.cannonjs.position.x -= delta / 2;
+      } else {
+          newWidth = topLayer.width; // Keep the width same as the original width
+          newDepth = overlap;
+          // Update the scale and position of the topLayer along the z-axis
+          topLayer.threejs.scale.z = overlap / size;
+          topLayer.threejs.position.z -= delta / 2;
+          // Update the position of the topLayer along the z-axis in the CannonJS model
+          topLayer.cannonjs.position.z -= delta / 2;
+      }
     
-        let newWidth, newDepth;
+      // Update the dimensions of the topLayer
+      topLayer.width = newWidth;
+      topLayer.depth = newDepth;
     
-        // Calculate new dimensions based on the cutting direction
-        if (direction == "x") {
-            newWidth = overlap;
-            newDepth = topLayer.width;
-            // Update the scale and position of the topLayer along the x-axis
-            topLayer.threejs.scale.x = overlap / size;
-            topLayer.threejs.position.x -= delta / 2;
-            // Update the position of the topLayer along the x-axis in the CannonJS model
-            topLayer.cannonjs.position.x -= delta / 2;
-        } else {
-            newWidth = topLayer.width;
-            newDepth = overlap;
-            // Update the scale and position of the topLayer along the z-axis
-            topLayer.threejs.scale.z = overlap / size;
-            topLayer.threejs.position.z -= delta / 2;
-            // Update the position of the topLayer along the z-axis in the CannonJS model
-            topLayer.cannonjs.position.z -= delta / 2;
-        }
+      /* 
+      Now we must do similar in CannonJs
+      Replace the shape with a smaller one in CannonJS, it's like a physics 
+      update of block dimension
+      */
+      const shape = new CANNON.Box(
+        new CANNON.Vec3(newWidth / 2, boxHeight / 2, newDepth / 2)
+      );
   
-    // Update the dimensions of the topLayer
-    topLayer.width = newWidth;
-    topLayer.depth = newDepth;
+      /* 
+      Remove all already existing shapes from the block, and now the block 
+      reflects the correct dimensions. 
+      We need this otherwise the physics object may have overlapping shapes
+      */
+      topLayer.cannonjs.shapes = [];  
+      topLayer.cannonjs.addShape(shape);
+  }
   
-    /* 
-    Now we must do similar in CannonJs
-    Replace the shape with a smaller one in CannonJS, it's like a physiscs 
-    update of block dimension
     
-    */
-    const shape = new CANNON.Box(
-      new CANNON.Vec3(newWidth / 2, boxHeight / 2, newDepth / 2)
-    );
-
-
-    /*Remove all already exist shape for the block, and now the block 
-    reflect correct dimensions. 
-    we need this otherwise the physics object may have overlayed shapes
-
-    */
-    topLayer.cannonjs.shapes = [];  
-    topLayer.cannonjs.addShape(shape);
-}
-
 
 function splitBlockAndAddNextOneIfOverlaps() {
   // Verifica se il gioco è terminato
@@ -453,9 +457,7 @@ function missedTheSpot() {
     //Result element if it exist in index.html
     if (resultsElement) resultsElement.style.display = "flex";
 }
-/*
-We call functio animation at every frame used requestAnimationFrame
-*/
+
 function animation(time) {
   if (lastTime) {
     const timePassed = time - lastTime;
@@ -494,10 +496,8 @@ function animation(time) {
     }
 
     // Adjust camera position
-    const cameraTargetY = boxHeight * (stackOnTop.length - 2) + 4;
-    if (camera.position.y < cameraTargetY) {
-      camera.position.y += speed * timePassed;
-    }
+    adjustCameraPosition(speed, timePassed, stackOnTop, boxHeight);
+
 
     updatePhysics(timePassed);
     renderer.render(scene, camera);
