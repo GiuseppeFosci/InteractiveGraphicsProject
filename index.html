@@ -1,3 +1,5 @@
+<!-- index.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,21 +26,26 @@
     </div>
     <div id="score">0</div>
 
-    <!-- Menu Settins -->
+    <!-- Menu Settings -->
     <div id="settings">
         <label for="speedRange">Speed:</label>
         <input type="range" id="speedRange" name="speedRange" min="5" max="15" value="7">
         <br>
         
-        <label for="perspective_camera">PerspectiveCamera</label>
-        <input type="checkbox" id="perspective_camera" name="perspective_camera">
+        <div class="checkbox-container">
+            <label class="checkbox-label" for="perspective_camera">Perspective Camera</label>
+
+            <input type="checkbox" id="perspective_camera" name="perspective_camera">
+            
+            
+        </div>
         
-        <br>
-        <label for="antialiasing">Antialiasing</label>
-        <input type="checkbox" id="antialiasing" name="antialiasing">
+        <div class="checkbox-container">
+            <label class="checkbox-label" for="antialiasing">Antialiasing</label>
+            <input type="checkbox" id="antialiasing" name="antialiasing">
+           
+        </div>
         
-        <br>
-    
         <label for="cameraX">Camera X:</label>
         <input type="range" id="cameraX" name="cameraX" min="3" max="10" value="4">
         <br>
@@ -50,15 +57,17 @@
         <label for="cameraZ">Camera Z:</label>
         <input type="range" id="cameraZ" name="cameraZ" min="3" max="10" value="4">
         <br>
-        <label for="enableFog">Enable Fog</label>
-        <input type="checkbox" id="enableFog" name="enableFog">
+        
+        <div class="checkbox-container">
+            <label class="checkbox-label" for="enableFog">Enable Fog</label>
+            <input type="checkbox" id="enableFog" name="enableFog">
+           
+        </div>
         
         <br>
         
         <button id="applySettingsButton">Apply Settings</button>
     </div>
-    
-    
 
     <script type="importmap">
     {
@@ -69,7 +78,6 @@
     }
     </script>
 
-    
     <script type="module" src="js/options.js"></script>
     <script type="module" src="js/game.js"></script>
 </body>

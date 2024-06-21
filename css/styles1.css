@@ -125,3 +125,74 @@ a:visited {
   padding: 0px 8px;
   border-radius: 2px;
 }
+/* styles1.css */
+/* styles1.css */
+
+/* Stili per le checkbox e le relative label */
+.checkbox-container {
+  display: flex; /* Utilizza il layout flexbox */
+  align-items: center; /* Allinea verticalmente al centro */
+  margin-bottom: 10px; /* Spazio inferiore tra le checkbox */
+}
+
+.checkbox-label {
+  margin-left: 10px; /* Margine a sinistra per separare dalla checkbox */
+  font-weight: bold; /* Testo in grassetto */
+}
+
+/* Stili per le slider */
+input[type="range"] {
+  -webkit-appearance: none; /* Rimuove lo stile predefinito del browser */
+  width: 100%; /* Larghezza completa */
+  height: 10px; /* Altezza personalizzata */
+  background-color: #ddd; /* Colore di sfondo */
+  border-radius: 5px; /* Angoli arrotondati */
+  outline: none; /* Rimuove l'outline di focus */
+  opacity: 0.7; /* Opacità */
+  transition: opacity 0.15s ease-in-out;
+}
+
+input[type="range"]:hover {
+  opacity: 1; /* Opacità aumentata al passaggio */
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Rimuove lo stile predefinito del thumb di WebKit */
+  appearance: none; /* Rimuove lo stile predefinito del thumb */
+  width: 20px; /* Larghezza del thumb */
+  height: 20px; /* Altezza del thumb */
+  background-color: #4CAF50; /* Colore di sfondo del thumb */
+  border-radius: 50%; /* Bordi arrotondati */
+  cursor: pointer; /* Cambia il cursore al passaggio */
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px; /* Larghezza del thumb per Firefox */
+  height: 20px; /* Altezza del thumb per Firefox */
+  background-color: #4CAF50; /* Colore di sfondo del thumb per Firefox */
+  border-radius: 50%; /* Bordi arrotondati per Firefox */
+  cursor: pointer; /* Cambia il cursore al passaggio per Firefox */
+}
+
+/* Stili per le label */
+label {
+  display: block; /* Rende le label un blocco */
+  margin-bottom: 5px; /* Spazio inferiore tra le label */
+  font-weight: bold; /* Testo in grassetto */
+}
+
+/* Stili per il pulsante "Apply Settings" */
+#applySettingsButton {
+  background-color: #4CAF50; /* Colore di sfondo del pulsante */
+  color: white; /* Colore del testo */
+  border: none; /* Rimuove il bordo */
+  padding: 10px 20px; /* Spaziatura interna */
+  font-size: 16px; /* Dimensione del testo */
+  cursor: pointer; /* Cambia il cursore al passaggio */
+  border-radius: 4px; /* Angoli arrotondati */
+  transition: background-color 0.3s;
+}
+
+#applySettingsButton:hover {
+  background-color: #45a049; /* Cambia il colore di sfondo al passaggio */
+}
