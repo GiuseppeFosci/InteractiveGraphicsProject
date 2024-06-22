@@ -5,7 +5,16 @@
     <title>BlockGame</title>
     <link rel="stylesheet" href="css/styles1.css">
     <style>
-        body { margin: 0; font-family: 'Press Start 2P', cursive; } /* Applica il font da gioco al corpo */
+        body { margin: 0; font-family: 'Press Start', cursive; } /* Applica il font da gioco al corpo */
+
+        /* Stile per le checkbox */
+        .checkbox-container {
+            margin-bottom: 8px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
@@ -56,6 +65,27 @@
             <input type="checkbox" id="enableFog" name="enableFog">
             <label class="checkbox-label" for="enableFog">Enable Fog</label>
         </div>
+
+        <!-- Checkbox per le luci -->
+        <div class="checkbox-container">
+            <input type="checkbox" id="ambientLightCheckbox" name="ambientLightCheckbox">
+            <label class="checkbox-label" for="ambientLightCheckbox">Ambient Light</label>
+        </div>
+
+        <div class="checkbox-container">
+            <input type="checkbox" id="directionalLightCheckbox" name="directionalLightCheckbox">
+            <label class="checkbox-label" for="directionalLightCheckbox">Directional Light</label>
+        </div>
+
+        <div class="checkbox-container">
+            <input type="checkbox" id="pointLightCheckbox" name="pointLightCheckbox">
+            <label class="checkbox-label" for="pointLightCheckbox">Point Light</label>
+        </div>
+
+        <div class="checkbox-container">
+            <input type="checkbox" id="spotLightCheckbox" name="spotLightCheckbox">
+            <label class="checkbox-label" for="spotLightCheckbox">Spot Light</label>
+        </div>
         
         <br>
         
@@ -65,8 +95,9 @@
     <script type="importmap">
     {
         "imports": {
-            "three": "https://unpkg.com/three/build/three.module.js",
-            "cannon-es": "https://unpkg.com/cannon-es/dist/cannon-es.js"
+            "three": "https://cdn.skypack.dev/three@0.132.2/build/three.module.js",
+            "three/examples/jsm/loaders/OBJLoader": "https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/OBJLoader.js",
+            "cannon-es": "https://cdn.skypack.dev/cannon-es"
         }
     }
     </script>
@@ -75,4 +106,3 @@
     <script type="module" src="js/game.js"></script>
 </body>
 </html>
-

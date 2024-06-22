@@ -25,7 +25,11 @@ let antialias_setting = true;
 let alpha;
 let enableFog = false;
 let perspective_camera; 
-let cube_camera;
+
+let pointLightEnabled = false;
+let ambientLightEnabled =false;
+let spotLightEnabled = false;
+let directionalLightEnabled = false;
 let difficulty = 0.008;
 let precision = 'highp';       // Precisione alta per gli shader
 let gravity = 9.8;
@@ -50,20 +54,39 @@ window.addEventListener("wheel", function(event) {
 init();
 
 /*** EVENT HANDLER ***/
-// Aggiorna la variabile difficulty, perspective_camera, antialiasing e gravity quando si preme il pulsante "Apply Settings"
 document.getElementById("applySettingsButton").addEventListener("click", () => {
+    
   difficulty = parseFloat(document.getElementById("speedRange").value) / 1000;
-  console.log("Difficulty updated to:", difficulty); // Stampa il valore aggiornato per il debug
+  //console.log("Difficulty updated to:", difficulty); // Stampa il valore aggiornato per il debug
   perspective_camera = document.getElementById("perspective_camera").checked;
-  console.log("Perspective Camera updated to:", perspective_camera);
+  //console.log("Perspective Camera updated to:", perspective_camera);
   antialias_setting = document.getElementById("antialiasing").checked;
-  console.log("Antialiasing:", antialias_setting);
+  //console.log("Antialiasing:", antialias_setting);
   cameraX = parseFloat(document.getElementById("cameraX").value);
   cameraY = parseFloat(document.getElementById("cameraY").value);
   cameraZ = parseFloat(document.getElementById("cameraZ").value);
-  console.log("Camera coordinates updated to: X =", cameraX, ", Y =", cameraY, ", Z =", cameraZ);
+  //console.log("Camera coordinates updated to: X =", cameraX, ", Y =", cameraY, ", Z =", cameraZ);
   enableFog = document.getElementById("enableFog").checked;
-  console.log("Fog enabled updated to :", enableFog);
+  //console.log("Fog enabled updated to :", enableFog);
+
+  // Update lighting settings based on checkboxes
+  ambientLightEnabled = document.getElementById("ambientLightCheckbox").checked;
+ 
+  console.log("Ambient Light updated to:", ambientLightEnabled);
+
+  directionalLightEnabled = document.getElementById("directionalLightCheckbox").checked;
+ 
+  console.log("Directional Light updated to:", directionalLightEnabled);
+
+  pointLightEnabled = document.getElementById("pointLightCheckbox").checked;
+
+  console.log("Point Light updated to:", pointLightEnabled);
+
+  spotLightEnabled = document.getElementById("spotLightCheckbox").checked;
+  
+  console.log("Spot Light updated to:", spotLightEnabled);
+updateSceneLights();
+  // Update scene based on fog checkbox
   if (scene) {
     if (enableFog) {
       const near = 5;
@@ -77,6 +100,7 @@ document.getElementById("applySettingsButton").addEventListener("click", () => {
     }
   }
 });
+
 
 //window.addEventListener("mousedown", eventHandler);
 window.addEventListener("touchstart", eventHandler); //Touchstart for touchdevices
@@ -160,6 +184,7 @@ function setRobotPrecision() {
         scene.fog = null; 
       }
     }
+
     camera.position.set(cameraX, cameraY, cameraZ);
     camera.lookAt(0, 0, 0);
     
@@ -174,16 +199,10 @@ function setRobotPrecision() {
     // First layer
     addLayer(-10, 0, originalBoxSize, originalBoxSize, "x");
   
-    // Set up lights
-    //Ambient light with white colour and intensity of 60%, uniform way (all object in same way)
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
-  
-    //Directional light
-    const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
-    dirLight.position.set(10, 20, 0);
-    scene.add(dirLight);
-  
+    updateSceneLights();
+
+
+    
     // Set up renderer
     renderer = new THREE.WebGLRenderer({ 
       antialias: antialias_setting,
@@ -561,14 +580,64 @@ function adjustCameraPosition(speed, timePassed, stackOnTop, boxHeight) {
     });
   }
   
+  function updateSceneLights() {
+    
+      console.log("Ambient Light Enabled:", ambientLightEnabled);
+      console.log("Directional Light Enabled:", directionalLightEnabled);
+      console.log("Point Light Enabled:", pointLightEnabled);
+      console.log("Spot Light Enabled:", spotLightEnabled);
+  
+    // Rimuovi tutte le luci dalla scena
 
-
-
+    console.log(scene.children);
+      const lightsToRemove = scene.children.filter(obj => obj.type.includes('Light'));
+      lightsToRemove.forEach(light => {
+        scene.remove(light);
+    });
 
   
+    // Aggiungi le luci necessarie in base allo stato dei checkbox
+    if (ambientLightEnabled) {
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+    }
+
+    if (directionalLightEnabled) {
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+        dirLight.position.set(10, 20, 0);
+        scene.add(dirLight);
+      
+    }
+
+    if (pointLightEnabled) {
+        const pointLight = new THREE.PointLight(0xffffff, 1, 1);
+        pointLight.position.set(10, 10, 10);
+        scene.add(pointLight);
+    }
+
+    if (spotLightEnabled) {
+        const spotLight = new THREE.SpotLight(0xffffff);
+        spotLight.position.set(30, 15, 1);
+        scene.add(spotLight);
+    }
+}
 
 
 
 
+/*
+function LightPosition(){
+  // Creare una sfera per visualizzare la posizione della luce
+  const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32); // Creare una sfera di raggio 0.5
+  const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 }); // Materiale giallo
+  const lightSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+
+  // Impostare la posizione della sfera sulla posizione della luce
+  lightSphere.position.copy(spotLight.position);
+
+  // Aggiungere la sfera alla scena
+  scene.add(lightSphere);
+}
+*/
 
   
