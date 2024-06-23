@@ -42,19 +42,6 @@ let cameraX = 4;
 let cameraY = 4;
 let cameraZ = 4;
 
-/*
-// Gestione dello zoom in e out con la rotella del mouse
-window.addEventListener("wheel", function(event) {
-    // Calcola lo spostamento della telecamera basato sul movimento della rotella del mouse
-    let zoomAmount = event.deltaY * 0.1; // Modifica questo valore per regolare la velocità dello zoom
-
-    // Aggiorna la posizione della telecamera
-    camera.position.z += zoomAmount;
-});
-*/
-
-
-
 
 
 /*** EVENT HANDLER ***/
@@ -197,8 +184,6 @@ function init() {
       precision: 'highp',             // Precisione alta per gli shader
       
     
-    
-  
     });
   
     renderer.setSize(window.innerWidth, window.innerHeight);
