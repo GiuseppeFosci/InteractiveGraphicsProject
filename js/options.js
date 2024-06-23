@@ -1,5 +1,5 @@
 let difficulty = 0; // Initialize the difficulty variable
-let gravity = 9.8;
+let gravity = 0;
 
 // Add an event listener to the "Apply Settings" button to apply the settings
 document.getElementById("applySettingsButton").addEventListener("click", () => {
@@ -11,10 +11,11 @@ function applySettings() {
    // Retrieve the value of the settings slider and assign it to the difficulty variable
    difficulty = parseFloat(document.getElementById("speedRange").value) / 1000;
    //console.log("Selected difficulty value:", difficulty);
+
+   gravity = parseFloat(document.getElementById("gravityRange").value);
+   console.log("Selected difficulty value:", difficulty);
    
-   // Retrieve the state of the perspective camera checkbox and assign the value to a variable
-   const PerspectiveCamera = document.getElementById("PerspectiveCamera").checked;
-   //console.log("Selected Perspective Camera:", PerspectiveCamera);
+
    
    // Retrieve the values of the X, Y, and Z coordinates sliders for the camera and assign them to their respective variables
    const cameraX = parseFloat(document.getElementById("cameraX").value);
@@ -32,17 +33,17 @@ function applySettings() {
 
    // Retrieve the state of the ambient light checkbox and assign the value to a variable
    const ambientLightEnabled = document.getElementById("ambientLightCheckbox").checked;
-   console.log("Ambient Light enabled:", ambientLightEnabled);
+   //console.log("Ambient Light enabled:", ambientLightEnabled);
 
    // Retrieve the state of the directional light checkbox and assign the value to a variable
    const directionalLightEnabled = document.getElementById("directionalLightCheckbox").checked;
-   console.log("Directional Light enabled:", directionalLightEnabled);
+   //console.log("Directional Light enabled:", directionalLightEnabled);
 
    // Retrieve the state of the point light checkbox and assign the value to a variable
    const pointLightEnabled = document.getElementById("pointLightCheckbox").checked;
-   console.log("Point Light enabled:", pointLightEnabled);
+   //console.log("Point Light enabled:", pointLightEnabled);
 
    // Retrieve the state of the spot light checkbox and assign the value to a variable
    const spotLightEnabled = document.getElementById("spotLightCheckbox").checked;
-   console.log("Spot Light enabled:", spotLightEnabled);
+   //console.log("Spot Light enabled:", spotLightEnabled);
 }

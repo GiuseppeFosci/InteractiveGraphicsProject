@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+
 
 window.focus(); // Capture keys right away (by default focus is on editor)
 
@@ -24,7 +26,7 @@ const resultsElement = document.getElementById("results");
 let AntialiasSetting = true;
 let alpha;
 let enableFog = false;
-let PerspectiveCamera; 
+
 
 
 let ambientLightEnabled =true;
@@ -34,7 +36,7 @@ let spotLightEnabled = false;
 
 let difficulty = 0.008;
 let precision = 'highp';       // Precisione alta per gli shader
-let gravity = 9.8;
+let gravityRange = 10;
 
 let cameraX = 4;
 let cameraY = 4;
@@ -53,15 +55,17 @@ window.addEventListener("wheel", function(event) {
 
 
 
-init();
+
 
 /*** EVENT HANDLER ***/
 document.getElementById("applySettingsButton").addEventListener("click", () => {
     
   difficulty = parseFloat(document.getElementById("speedRange").value) / 1000;
   //console.log("Difficulty updated to:", difficulty); // Stampa il valore aggiornato per il debug
-  PerspectiveCamera = document.getElementById("PerspectiveCamera").checked;
-  //console.log("Perspective Camera updated to:", PerspectiveCamera);
+  gravityRange = parseFloat(document.getElementById("gravityRange").value);
+  console.log("Gravity Range  updated to:", gravityRange);
+
+
   AntialiasSetting = document.getElementById("antialiasing").checked;
   //console.log("Antialiasing:", AntialiasSetting);
   cameraX = parseFloat(document.getElementById("cameraX").value);
@@ -87,7 +91,7 @@ document.getElementById("applySettingsButton").addEventListener("click", () => {
   spotLightEnabled = document.getElementById("spotLightCheckbox").checked;
   
   console.log("Spot Light updated to:", spotLightEnabled);
-updateSceneLights();
+   updateSceneLights();
   // Update scene based on fog checkbox
   if (scene) {
     if (enableFog) {
@@ -101,6 +105,8 @@ updateSceneLights();
       scene.fog = null; // Rimuovi la nebbia dalla scena
     }
   }
+  
+  
 });
 
 
@@ -121,6 +127,10 @@ window.addEventListener("keydown", function (event) {
   }
 });
 
+
+init(); 
+
+
 function eventHandler() {
   if (autopilot) startGame();
   else splitBlockAndAddNextOneIfOverlaps();
@@ -131,19 +141,19 @@ function setRobotPrecision() {
     robotPrecision = Math.random() * 1 - 0.5;
   }
   
-  function init() {
+function init() {
     autopilot = true;
     gameEnded = false;
     lastTime = 0;
     stackOnTop = [];
     overhangs = [];
     setRobotPrecision();
-    PerspectiveCamera = false;
   
   
     // Initialize CannonJS
     world = new CANNON.World();
-    world.gravity.set(0, gravity , 0); // Gravity pulls things down
+    console.log("SET GRACITY TO ", gravityRange);
+    world.gravity.set(0, -gravityRange , 0); // Gravity pulls things down
     //Define algorithm for collision, it is the basic metod for verify collision with every object in the world
     world.broadphase = new CANNON.NaiveBroadphase();
     //Max number of iteration managed
@@ -154,7 +164,7 @@ function setRobotPrecision() {
     const width = 12  ;
     const height = width / aspect;
   
-    if (PerspectiveCamera == false ){
+    
     camera = new THREE.OrthographicCamera(
       width / -2    , // left
       width / 2, // right
@@ -163,37 +173,14 @@ function setRobotPrecision() {
       0, // near plane
       100 // far plane
     );
-  }
-  //TODO ENABLE OPTION OF PROSPECTIVE CAMERA
-    // If you want to use perspective camera instead, uncomment these lines
-    if (PerspectiveCamera == true )
-     camera = new THREE.PerspectiveCamera(
-      45, // field of view
-      aspect, // aspect ratio
-      1, // near plane
-      100 // far plane
-    );
-    
-    if (scene) {
-      if (fog) {
-        const near = 5;
-        const far = 10;
-        const color = 0xefd1b5; // Colore della nebbia in esadecimale
-        scene.background = new THREE.Color(0xaaaaaa); 
-        scene.fog = new THREE.Fog(color, near, far);   
-      } else {
-        scene.background = new THREE.Color(0xaaaaaa); // Imposta lo sfondo senza nebbia
-        scene.fog = null; 
-      }
-    }
-
+  
+  
     camera.position.set(cameraX, cameraY, cameraZ);
     camera.lookAt(0, 0, 0);
     
     scene = new THREE.Scene();
 
-
-  
+    //loadModel();
   
     // Foundation
     addLayer(0, 0, originalBoxSize, originalBoxSize);
@@ -203,8 +190,6 @@ function setRobotPrecision() {
   
     updateSceneLights();
 
-
-    
     // Set up renderer
     renderer = new THREE.WebGLRenderer({ 
       antialias: AntialiasSetting,
@@ -255,6 +240,8 @@ function setRobotPrecision() {
         world.removeBody(world.bodies[0]);
       }
     }
+    console.log("SET GRAVITY TO ", gravityRange);
+    world.gravity.set(0, -gravityRange , 0); // Gravity pulls things down
     
 
     /*When we restart a game we want to remove all the block,
@@ -597,7 +584,6 @@ function adjustCameraPosition(speed, timePassed, stackOnTop, boxHeight) {
         scene.remove(light);
     });
 
-  
     // Aggiungi le luci necessarie in base allo stato dei checkbox
     if (ambientLightEnabled) {
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -611,7 +597,6 @@ function adjustCameraPosition(speed, timePassed, stackOnTop, boxHeight) {
       
     }
 
-    // Add point light if enabled
     if (pointLightEnabled) {
       const pointLight = new THREE.PointLight(0xffffff, 0.6, 50);
       pointLight.position.set(10, 20, 0);
@@ -643,5 +628,41 @@ function LightPosition(){
 }
 */
 
+function loadModel(){
+    
+
+  const loader = new OBJLoader();
+  const textureLoader = new THREE.TextureLoader();
+  
+  loader.load(
+    '../Free_tower7OBJ/Free_tower7/obj/objTower.obj',
+    function (obj) {
+      obj.scale.set(0.5, 0.5, 0.5); // Scala il modello al 50% della dimensione originale
+      const texture = textureLoader.load('../Free_tower7OBJ/Free_tower7/textures/america026.jpg');
+      obj.traverse(function (child) {
+        if (child instanceof THREE.Mesh) {
+          child.material.map = texture; // Applica la texture a tutti i mesh del modello
+        }
+      });
+  
+      // Posiziona il modello più a sinistra
+      obj.position.x = -5; // Sposta il modello a -5 unità sull'asse x
+      obj.position.z = -10; // Esempio: sposta il modello a -10 unità sull'asse z
+      scene.add(obj); // Aggiungi il modello alla scena Three.js
+    },
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    },
+    function (error) {
+      console.error('Errore nel caricamento del modello OBJ', error);
+    }
+  );
+  
+
+  
+
+
+
+}
   
   
