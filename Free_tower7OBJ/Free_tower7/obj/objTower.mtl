@@ -1,0 +1,32 @@
+newmtl lambert6SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd -mm_0_0.863415_germany011.jpg
+bump  -bm 0.1 germany011b.jpg
+Ni 1.00
+newmtl lennox2:lambert9SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd -mm_0_0.860976_england016.jpg
+bump  -bm 0.1 england016b.jpg
+Ni 1.00
+newmtl lennox2:lambert12SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd wincolor.jpg
+bump  -bm 0.1 wincolor.jpg
+Ni 1.00
+newmtl lennox2:lambert13SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd entr063M.jpg
+bump  -bm 0.1 entr063Mb.jpg
+Ni 1.00

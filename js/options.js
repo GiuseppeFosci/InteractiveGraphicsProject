@@ -13,8 +13,8 @@ function applySettings() {
    //console.log("Selected difficulty value:", difficulty);
    
    // Retrieve the state of the perspective camera checkbox and assign the value to a variable
-   const perspective_camera = document.getElementById("perspective_camera").checked;
-   //console.log("Selected Perspective Camera:", perspective_camera);
+   const PerspectiveCamera = document.getElementById("PerspectiveCamera").checked;
+   //console.log("Selected Perspective Camera:", PerspectiveCamera);
    
    // Retrieve the values of the X, Y, and Z coordinates sliders for the camera and assign them to their respective variables
    const cameraX = parseFloat(document.getElementById("cameraX").value);

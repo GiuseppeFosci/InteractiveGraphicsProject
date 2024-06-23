@@ -21,15 +21,17 @@ const resultsElement = document.getElementById("results");
 
 
 //SETTINGS
-let antialias_setting = true;
+let AntialiasSetting = true;
 let alpha;
 let enableFog = false;
-let perspective_camera; 
+let PerspectiveCamera; 
 
+
+let ambientLightEnabled =true;
+let directionalLightEnabled = true;
 let pointLightEnabled = false;
-let ambientLightEnabled =false;
 let spotLightEnabled = false;
-let directionalLightEnabled = false;
+
 let difficulty = 0.008;
 let precision = 'highp';       // Precisione alta per gli shader
 let gravity = 9.8;
@@ -58,10 +60,10 @@ document.getElementById("applySettingsButton").addEventListener("click", () => {
     
   difficulty = parseFloat(document.getElementById("speedRange").value) / 1000;
   //console.log("Difficulty updated to:", difficulty); // Stampa il valore aggiornato per il debug
-  perspective_camera = document.getElementById("perspective_camera").checked;
-  //console.log("Perspective Camera updated to:", perspective_camera);
-  antialias_setting = document.getElementById("antialiasing").checked;
-  //console.log("Antialiasing:", antialias_setting);
+  PerspectiveCamera = document.getElementById("PerspectiveCamera").checked;
+  //console.log("Perspective Camera updated to:", PerspectiveCamera);
+  AntialiasSetting = document.getElementById("antialiasing").checked;
+  //console.log("Antialiasing:", AntialiasSetting);
   cameraX = parseFloat(document.getElementById("cameraX").value);
   cameraY = parseFloat(document.getElementById("cameraY").value);
   cameraZ = parseFloat(document.getElementById("cameraZ").value);
@@ -91,7 +93,7 @@ updateSceneLights();
     if (enableFog) {
       const near = 5;
       const far = 10;
-      const color = 0xefd1b5; // Colore della nebbia in esadecimale
+      const color = 0xefd1b5; 
       scene.background = new THREE.Color(0xaaaaaa); // Imposta uno sfondo grigio chiaro
       scene.fog = new THREE.Fog(color, near, far);   
     } else {
@@ -136,12 +138,12 @@ function setRobotPrecision() {
     stackOnTop = [];
     overhangs = [];
     setRobotPrecision();
-    perspective_camera = false;
+    PerspectiveCamera = false;
   
   
     // Initialize CannonJS
     world = new CANNON.World();
-    world.gravity.set(0, -gravity , 0); // Gravity pulls things down
+    world.gravity.set(0, gravity , 0); // Gravity pulls things down
     //Define algorithm for collision, it is the basic metod for verify collision with every object in the world
     world.broadphase = new CANNON.NaiveBroadphase();
     //Max number of iteration managed
@@ -152,7 +154,7 @@ function setRobotPrecision() {
     const width = 12  ;
     const height = width / aspect;
   
-    if (perspective_camera == false ){
+    if (PerspectiveCamera == false ){
     camera = new THREE.OrthographicCamera(
       width / -2    , // left
       width / 2, // right
@@ -164,7 +166,7 @@ function setRobotPrecision() {
   }
   //TODO ENABLE OPTION OF PROSPECTIVE CAMERA
     // If you want to use perspective camera instead, uncomment these lines
-    if (perspective_camera == true )
+    if (PerspectiveCamera == true )
      camera = new THREE.PerspectiveCamera(
       45, // field of view
       aspect, // aspect ratio
@@ -205,7 +207,7 @@ function setRobotPrecision() {
     
     // Set up renderer
     renderer = new THREE.WebGLRenderer({ 
-      antialias: antialias_setting,
+      antialias: AntialiasSetting,
       alpha:false,        // Abilita la trasparenza del canvas
       precision: 'highp',             // Precisione alta per gli shader
       
@@ -609,10 +611,11 @@ function adjustCameraPosition(speed, timePassed, stackOnTop, boxHeight) {
       
     }
 
+    // Add point light if enabled
     if (pointLightEnabled) {
-        const pointLight = new THREE.PointLight(0xffffff, 1, 1);
-        pointLight.position.set(10, 10, 10);
-        scene.add(pointLight);
+      const pointLight = new THREE.PointLight(0xffffff, 0.6, 50);
+      pointLight.position.set(10, 20, 0);
+      scene.add(pointLight);
     }
 
     if (spotLightEnabled) {
@@ -640,4 +643,5 @@ function LightPosition(){
 }
 */
 
+  
   
