@@ -46,4 +46,6 @@ function applySettings() {
    // Retrieve the state of the spot light checkbox and assign the value to a variable
    const spotLightEnabled = document.getElementById("spotLightCheckbox").checked;
    //console.log("Spot Light enabled:", spotLightEnabled);
+
+
 }
