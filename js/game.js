@@ -569,7 +569,6 @@ function adjustCameraPosition(speed, timePassed, stackOnTop, boxHeight) {
         scene.remove(light);
     });
 
-    // Aggiungi le luci necessarie in base allo stato dei checkbox
     if (ambientLightEnabled) {
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
         scene.add(ambientLight);
@@ -598,17 +597,15 @@ function adjustCameraPosition(speed, timePassed, stackOnTop, boxHeight) {
 
 
 
-/*
+/* //CAN BE USED TO CRATE A SPHERE FOR VISUALIZE LIGHT POSITION
 function LightPosition(){
-  // Creare una sfera per visualizzare la posizione della luce
+  
   const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32); // Creare una sfera di raggio 0.5
   const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 }); // Materiale giallo
   const lightSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
-  // Impostare la posizione della sfera sulla posizione della luce
   lightSphere.position.copy(spotLight.position);
 
-  // Aggiungere la sfera alla scena
   scene.add(lightSphere);
 }
 */
@@ -643,10 +640,6 @@ function loadModel(){
     }
   );
   
-
-  
-
-
 
 }
   
